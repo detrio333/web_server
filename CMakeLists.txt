@@ -1,35 +1,21 @@
-project(stepic_cpp_multithreading_final_exam)
+cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow -Werror")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-field-initializers")
-if (CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wlogical-op")
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 5.5.0)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wduplicated-cond")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnull-dereference")
-    endif()
-else ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++98-compat")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-future-compat")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-prototypes")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-float-conversion")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-braces")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++98-compat-pedantic")
-endif()
+project(final)
+include_directories(include)
 
-find_package(Boost COMPONENTS program_options REQUIRED)
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+find_package( Threads ) 
 
-add_executable(final
-    src/final.cxx
-    src/http_server.h
-    src/http_server.cxx
-    src/thread_safe_socket_queue.h
-    src/thread_safe_socket_queue.cxx)
+set(SRC_EXE src/main.c 
+            src/arguments.c 
+            src/daemonize.c
+            src/logger.c
+            src/server.c
+            src/server_lowlvl.c
+            src/ioservice.c
+            src/data_service.c)
 
-target_link_libraries(final
-    pthread
-    ${Boost_PROGRAM_OPTIONS_LIBRARIES})
+
+add_executable(final ${SRC_EXE})
+
+target_link_libraries(final ${CMAKE_THREAD_LIBS_INIT})
